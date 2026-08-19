@@ -145,3 +145,32 @@ describe('the two enums remain genuinely distinct (§0.1 defect #19)', () => {
     for (const r of RENTAL_STATUSES) expect(a.has(r), `"${r}" appears in both enums`).toBe(false)
   })
 })
+
+/**
+ * §41.5 — errors state what happened in plain language.
+ *
+ * `IllegalTransition` messages are accurate and useless to a person:
+ * `rental: cannot "extend" from "ending"`. Rendering one to a user is an
+ * internals leak, and this is the shape of message the lifecycle actions
+ * produce most often.
+ */
+describe('§41.5 — no state-machine internals reach the user', () => {
+  const INTERNALS = /cannot "|IllegalTransition|undefined|null|_id\b/
+
+  it('every illegal rental transition produces a message safe to render', async () => {
+    // The translator lives beside the actions; import lazily so this stays a
+    // pure unit test of the message shape.
+    const { __friendlyForTest } = await import('../actions/error-copy')
+    for (const from of RENTAL_STATUSES) {
+      for (const e of RENTAL_EVENTS) {
+        if (canTransitionRental(from, e)) continue
+        let raw = ''
+        try { transitionRental(from, e) } catch (err) { raw = (err as Error).message }
+        const shown = __friendlyForTest(raw)
+        expect(shown, `${from} + ${e} -> "${shown}"`).not.toMatch(INTERNALS)
+        expect(shown.length).toBeGreaterThan(10)
+        expect(shown[0]).toBe(shown[0].toUpperCase())
+      }
+    }
+  })
+})

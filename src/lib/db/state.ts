@@ -28,7 +28,7 @@
  */
 
 import type {
-  EventType, Favorite, MysteryMatch, MysterySubscription, Profile, Purchase,
+  EventType, Favorite, MysteryMatch, MysterySubscription, Purchase,
   Rental, UserAffinityRow, UserPreferences,
 } from './types'
 import { AUTO_RETURN_AFTER_DAYS, RESERVE_EXPIRY_HOURS } from '../pricing/config'

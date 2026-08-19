@@ -33,6 +33,7 @@ import {
   EXTEND_GRACE_DAYS, MAX_CUMULATIVE_RENTAL_MONTHS,
 } from '../pricing/config'
 import { transitionArtwork, transitionRental } from '../state/machines'
+import { friendly } from './error-copy'
 import { RENTAL_TERMS, RETURN_REASONS, type RentalTerm } from '../taxonomy'
 import type { Rental, ShippingAddress } from '../db/types'
 
@@ -80,7 +81,7 @@ export async function createRental(
     const overlay = availabilityOverlay(s)
     const current = overlay.get(art.id) ?? art.availability
     try {
-      transitionArtwork(current, swapFromRentalId ? 'rent' : 'rent')
+      transitionArtwork(current, 'rent')
     } catch {
       throw new MutationError('unavailable')
     }
@@ -339,12 +340,6 @@ function parseAddress(form: unknown): ShippingAddress | null {
   const r = purchaseAddressSchema.safeParse(form)
   if (!r.success) return null
   return { line1: r.data.line1, line2: r.data.line2 || null, city: r.data.city, state: r.data.state, zip: r.data.zip }
-}
-
-function friendly(error?: string): string {
-  if (!error || error === 'unknown-error') return 'Something went wrong. Try again.'
-  if (error === 'not-signed-in') return 'Sign in first.'
-  return error
 }
 
 function revalidateAll() {

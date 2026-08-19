@@ -14,7 +14,7 @@ import {
 import { comparisonPriceDollars } from '../pricing/rental'
 import { BUDGET_HARD_CUTOFF_MULTIPLE } from '../pricing/config'
 import { SIZE_INDEX } from '../taxonomy'
-import type { ArtworkAvailability, Color, Mood, Room, Size, Style } from '../taxonomy'
+import type { ArtworkAvailability, Color, Room, Size, Style } from '../taxonomy'
 
 export interface FeedFilters {
   styles?: Style[]

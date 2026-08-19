@@ -227,8 +227,11 @@ export async function createSubscription(input: unknown): Promise<MysteryResult>
           artist_id: m.artistId, artwork_id: m.artworkId, match_score: m.score,
           selected: false, revealed_at: null, created_at: new Date().toISOString(),
         })
-        // §23.1 — available → reserved, held until the reveal.
-        transitionArtwork('available', 'mystery_match')
+        // §23.1 — available → reserved, held until the reveal. The reservation
+        // is implied by the mystery_matches row: `availabilityOverlay` reads
+        // unrevealed matches as `reserved` and expires them after 24h. There is
+        // no separate flag to set, and calling transitionArtwork with a
+        // hardcoded 'available' would only have validated a literal.
       }
 
       // §41.5 — deliver fewer and SAY SO, with a prorated price.
@@ -285,14 +288,28 @@ export async function revealSubscription(subscriptionId: string): Promise<Myster
     const matches = s.matches.filter((m) => m.subscription_id === sub.id && m.cycle === sub.cycle)
     const now = new Date().toISOString()
 
+    // §23.3 — re-read availability INSIDE the transaction. A piece can be
+    // bought or rented between the match and the reveal (two tabs, or a user who
+    // walks away and comes back), and the previous version validated a hardcoded
+    // 'reserved' literal, so it could never catch that.
+    const overlay = availabilityOverlay(s)
+    let lost = 0
+
     for (const m of matches) {
       m.revealed_at = now
       if (!m.artwork_id) continue
       const art = getArtwork(m.artwork_id)
       if (!art) continue
 
-      // §23.1 — reserved → rented, in the same transaction as the reveal.
-      transitionArtwork('reserved', 'reveal')
+      const current = overlay.get(m.artwork_id) ?? art.availability
+      if (current !== 'reserved' && current !== 'available') {
+        // Gone. Drop it rather than creating a rental for a piece in someone
+        // else's home; §41.5's fewer-pieces path handles the shortfall.
+        lost++
+        continue
+      }
+      transitionArtwork(current === 'reserved' ? 'reserved' : 'available',
+                        current === 'reserved' ? 'reveal' : 'rent')
 
       const rental: Rental = {
         id: newId('rent_'),
@@ -323,13 +340,24 @@ export async function revealSubscription(subscriptionId: string): Promise<Myster
       s.rentals.push(rental)
     }
 
+    // §41.5 — "deliver fewer pieces and say so plainly WITH A PRORATED PRICE."
+    const delivered = matches.filter((m) => m.artwork_id).length - lost
+    if (lost > 0 && delivered > 0) {
+      const { monthlyCents } = proratedForFewerPieces(
+        { pieceType: sub.piece_type, size: sub.size, pieces: sub.number_of_pieces as 1 | 2 | 3 | 4 },
+        delivered,
+      )
+      sub.number_of_pieces = delivered
+      sub.monthly_price_cents = monthlyCents
+    }
+
     sub.current_period_start = today()
     sub.current_period_end = addMonths(today(), 1)
     sub.next_rotation_at = addMonths(today(), MYSTERY_ROTATION_MONTHS)
     sub.status = transitionMystery(sub.status, 'activate')
     sub.updated_at = now
 
-    pushEvent(s, 'mystery_revealed', { payload: { cycle: sub.cycle, pieces: matches.length } })
+    pushEvent(s, 'mystery_revealed', { payload: { cycle: sub.cycle, pieces: delivered, lost } })
     return { subscriptionId: sub.id }
   })
 

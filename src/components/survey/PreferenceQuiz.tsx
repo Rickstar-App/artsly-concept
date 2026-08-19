@@ -46,19 +46,27 @@ export function PreferenceQuiz({
 }: { initial?: Partial<Draft>; signedIn: boolean }) {
   const router = useRouter()
   const [step, setStep] = useState(0)
-  const [draft, setDraft] = useState<Draft>({ ...EMPTY_DRAFT, ...initial })
   const [error, setError] = useState<string | null>(null)
   const [pending, start] = useTransition()
 
-  // Partial progress survives a refresh (§10).
-  useEffect(() => {
-    if (initial && Object.keys(initial).length > 0) return
+  /**
+   * §10 — "partial progress persists in sessionStorage so a refresh doesn't lose
+   * work." Read LAZILY on first render rather than in an effect: setState inside
+   * an effect body causes a cascading render, and the survey is the first thing
+   * a new user touches.
+   *
+   * An existing taste profile always wins over a stale draft.
+   */
+  const [draft, setDraft] = useState<Draft>(() => {
+    if (initial && Object.keys(initial).length > 0) return { ...EMPTY_DRAFT, ...initial }
+    if (typeof window === 'undefined') return EMPTY_DRAFT
     try {
       const raw = sessionStorage.getItem(DRAFT_KEY)
-      if (raw) setDraft({ ...EMPTY_DRAFT, ...JSON.parse(raw) })
-    } catch { /* a corrupt draft is not worth surfacing */ }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+      return raw ? { ...EMPTY_DRAFT, ...JSON.parse(raw) } : EMPTY_DRAFT
+    } catch {
+      return EMPTY_DRAFT // a corrupt draft is not worth surfacing
+    }
+  })
 
   useEffect(() => {
     try { sessionStorage.setItem(DRAFT_KEY, JSON.stringify(draft)) } catch { /* private mode */ }

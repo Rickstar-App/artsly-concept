@@ -15,7 +15,7 @@
  */
 
 import type { Rng } from './rng'
-import { alpha, contrastPick, type Palette } from './palette'
+import { contrastPick, type Palette } from './palette'
 
 export interface GenContext {
   w: number
