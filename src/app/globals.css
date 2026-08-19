@@ -24,7 +24,9 @@
   --accent-soft:    #F0E6DE;
   --success:        #3F6B4F;
   --success-soft:   #EAF1EC;
-  --warning:        #A9762F;   /* RESERVED: rental urgency (<=14 days) only */
+  --warning:        #8E5E20;   /* RESERVED: rental urgency (<=14 days) only.
+                                  Darkened from #A9762F, which failed §45 at
+                                  3.95:1 on --surface. Now 5.57:1. */
   --warning-soft:   #FBF1E0;
   --danger:         #8C3A32;
   --danger-soft:    #F8EAE8;

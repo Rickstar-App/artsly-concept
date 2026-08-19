@@ -48,7 +48,7 @@ Warm off-white ground, near-black ink, exactly **one** accent.
 | `--accent-hover` | `#744C2F` | Accent interactive state. |
 | `--accent-soft` | `#F0E6DE` | Accent-tinted fill: chips, selected states. |
 | `--success` | `#3F6B4F` | Confirmation, in-budget, owned. |
-| `--warning` | `#A9762F` | **Reserved for rental urgency (≤14 days). Nothing else.** |
+| `--warning` | `#8E5E20` | **Reserved for rental urgency (≤14 days). Nothing else.** 5.6:1 on `--surface` — §45 names this pair explicitly, and the original `#A9762F` failed it at 3.95:1. |
 | `--warning-soft` | `#FBF1E0` | Urgency fill. |
 | `--danger` | `#8C3A32` | Destructive confirm, validation errors, forfeiture. |
 | `--danger-soft` | `#F8EAE8` | Error field fill. |

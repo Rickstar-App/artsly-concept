@@ -1,0 +1,53 @@
+# §37.5 — "scripts/validate-seed.ts must RUN IN CI and fail on any [violation]."
+# §32.4 — "Add a CI/lint check that fails the build if SUPABASE_SERVICE_ROLE_KEY
+#          appears in a client bundle."
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Seed validation (§37.5)
+        run: npm run seed:validate
+
+      - name: Build
+        run: npm run build
+
+      - name: Service-role key must not reach the client bundle (§32.4)
+        run: |
+          if grep -rl "SUPABASE_SERVICE_ROLE_KEY" .next/static 2>/dev/null; then
+            echo "::error::SUPABASE_SERVICE_ROLE_KEY found in a client bundle."
+            exit 1
+          fi
+          echo "Clean: no service-role key in .next/static"
+
+      - name: Banned rent-to-own copy must not appear (§7.4)
+        run: |
+          # pricing/config.ts DEFINES these patterns, so it matches by
+          # construction and is excluded.
+          if grep -rniE "apply your rent|rent toward ownership|rent[- ]to[- ]own" \
+               src/ --include="*.tsx" --include="*.ts" \
+               --exclude-dir=__tests__ \
+               | grep -v "src/lib/pricing/config.ts"; then
+            echo "::error::Banned §7.4 copy found. See NO_CREDIT_COPY in pricing/config.ts."
+            exit 1
+          fi
+          echo "Clean: no banned rent-to-own copy"
