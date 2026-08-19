@@ -141,7 +141,12 @@ export default async function DiscoverPage({ searchParams }: { searchParams: Pro
               <h2 className="section-title">
                 {primary.coldStart ? SECTION_LABELS.coldStart : SECTION_LABELS.personalized}
               </h2>
-              <p className="result-count tnum">{all.total} pieces</p>
+              {/* The filter bar already reports the total. Repeating it beside a
+                  section that shows 12 reads as a claim that this section holds
+                  all of them. Say what this section actually is. */}
+              <p className="result-count tnum">
+                Top {primary.items.length} of {all.total}
+              </p>
             </div>
             {primary.coldStart ? (
               <p className="section-note">
@@ -174,7 +179,9 @@ export default async function DiscoverPage({ searchParams }: { searchParams: Pro
           <section className="section">
             <div className="section-head">
               <h2 className="section-title">{SECTION_LABELS.exploreAll}</h2>
-              <p className="result-count tnum">{all.items.length} of {all.total}</p>
+              <p className="result-count tnum">
+                Showing {all.items.length} of {all.total}
+              </p>
             </div>
             <ArtworkGrid items={all.items.map((i) => toItem(i.artwork))} eagerCount={0} swapFrom={swapFrom} />
           </section>

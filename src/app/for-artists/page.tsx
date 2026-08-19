@@ -67,12 +67,46 @@ export default function ForArtistsPage() {
         </ol>
       </section>
 
+      {/*
+        * §52.2 lists seven questions the spec deliberately leaves open. The two
+        * that decide whether the split above is a business or a slogan are
+        * shipping economics and damage. An investor asks both inside five
+        * minutes, and a product that pretends otherwise loses the room. Stating
+        * them is stronger than hiding them.
+        */}
       <section className="section">
-        <h2 className="section-title">Honest about what isn’t built</h2>
+        <h2 className="section-title">What we haven’t solved yet</h2>
+        <p className="lede">
+          The split above is real. The economics underneath it are not finished, and
+          these are the three numbers that decide whether it holds.
+        </p>
         <ul className="gap-list">
-          <li>Payouts are not executed. The split is defined; disbursement is not.</li>
-          <li>There is no moderation queue for uploads.</li>
-          <li>Artist onboarding is not open — the ten artists here are seeded.</li>
+          <li>
+            <strong>Two-way shipping.</strong> Our 40% of a {dollars(bh.rental_3m_cents)} three-month
+            rental is {dollars(bh.rental_3m_cents - artistRentalEarningsCents(bh.rental_3m_cents))}, and
+            that has to cover freight in both directions on a {bh.width_in} × {bh.height_in} in piece,
+            packaging, and the platform. Plausible for a demo; not yet a business.
+            Regional hubs and longer default terms are the two levers we think move it.
+          </li>
+          <li>
+            <strong>Damage and loss.</strong> No policy exists. A deposit, a waiver line
+            item, or insurance priced into the rental — we have not chosen, and the choice
+            changes the price on every card.
+          </li>
+          <li>
+            <strong>Framing.</strong> Every price here assumes a ready-to-hang piece.
+            Who pays for framing, and whether it is optional, is unresolved.
+          </li>
+          <li>
+            <strong>Payouts.</strong> The split is defined and shown on your dashboard;
+            disbursement is not built. Monthly ACH above a threshold is the obvious answer.
+          </li>
+          <li>
+            <strong>Onboarding.</strong> Not open. The ten artists here are seeded, and
+            whether we curate or accept open signup determines whether supply is the
+            bottleneck.
+          </li>
+          <li>No moderation queue for uploads.</li>
         </ul>
       </section>
 

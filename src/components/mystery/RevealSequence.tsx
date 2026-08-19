@@ -122,7 +122,13 @@ export function RevealSequence({
 
   return (
     <section className="reveal">
-      <p className="eyebrow">Your {subscription.cycle > 1 ? `cycle ${subscription.cycle}` : 'first'} {count === 1 ? 'piece' : countWord}</p>
+      {/* "Your cycle 2 two" is not English. Cycle 1 is "your first N"; later
+          cycles name the cycle and the count separately. */}
+      <p className="eyebrow">
+        {subscription.cycle > 1
+          ? `Cycle ${subscription.cycle} · ${countWord} ${count === 1 ? 'piece' : 'pieces'}`
+          : `Your first ${count === 1 ? 'piece' : countWord}`}
+      </p>
       <h1 className="reveal-title">
         {count === 1 ? 'Here it is.' : 'Here they are.'}
       </h1>
