@@ -171,7 +171,13 @@ export default async function ArtworkPage({
 
           {why && result ? <WhyThisPiece lines={why} matchScore={result.match_score} /> : null}
 
-          {availability === 'available' || myRental ? (
+          {/*
+            * `iOwnIt` must be part of this condition. Without it a piece the
+            * viewer BOUGHT falls through to the "sold" notice, so the owner is
+            * told their own painting is unavailable. §21.2 says the buyer sees
+            * it as Owned, with no countdown and no return prompt.
+            */}
+          {availability === 'available' || myRental || iOwnIt ? (
             <PurchasePanel
               artwork={art}
               artistName={artist.name}

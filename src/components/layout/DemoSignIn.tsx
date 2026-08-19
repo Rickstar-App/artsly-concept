@@ -20,7 +20,19 @@ export function DemoSignIn({ viewer }: { viewer: ViewerSummary }) {
   const [error, setError] = useState<string | null>(null)
   const router = useRouter()
 
+  const enter = (account: (typeof DEMO_ACCOUNTS)[number]) =>
+    start(async () => {
+      setError(null)
+      const res = await signIn(account.email, process.env.NEXT_PUBLIC_DEMO_PASSWORD || 'curio-demo')
+      if (!res.ok) setError(res.error ?? 'Sign-in failed.')
+      else router.push(account.role === 'artist' ? '/artist-dashboard' : '/discover')
+    })
+
   if (viewer.signedIn) {
+    // §49 step 13 goes straight from the collector story to the artist story.
+    // Offering the OTHER demo account here makes that one click instead of
+    // sign-out-then-sign-in, which is two clicks of dead air mid-demo.
+    const other = DEMO_ACCOUNTS.find((a) => a.email !== viewer.email)
     return (
       <div className="demo-bar">
         <p className="demo-bar-label">
@@ -28,6 +40,16 @@ export function DemoSignIn({ viewer }: { viewer: ViewerSummary }) {
           <span className="demo-bar-role"> · {viewer.role}</span>
         </p>
         <div className="demo-bar-actions">
+          {other ? (
+            <button
+              type="button" className="btn btn-secondary btn-compact" disabled={pending}
+              title={other.sublabel}
+              onClick={() => enter(other)}
+            >
+              Switch to {other.display_name.split(' ')[0]}
+              {other.role === 'artist' ? ' (artist)' : ' (collector)'}
+            </button>
+          ) : null}
           <button
             type="button" className="btn btn-ghost btn-compact" disabled={pending}
             onClick={() => start(async () => { await resetDemo() })}
@@ -35,12 +57,13 @@ export function DemoSignIn({ viewer }: { viewer: ViewerSummary }) {
             Reset demo data
           </button>
           <button
-            type="button" className="btn btn-secondary btn-compact" disabled={pending}
+            type="button" className="btn btn-ghost btn-compact" disabled={pending}
             onClick={() => start(async () => { await signOut() })}
           >
             Sign out
           </button>
         </div>
+        {error ? <p className="error-text" role="alert">{error}</p> : null}
       </div>
     )
   }
@@ -59,14 +82,7 @@ export function DemoSignIn({ viewer }: { viewer: ViewerSummary }) {
             className="btn btn-secondary btn-compact"
             disabled={pending}
             title={a.sublabel}
-            onClick={() =>
-              start(async () => {
-                setError(null)
-                const res = await signIn(a.email, process.env.NEXT_PUBLIC_DEMO_PASSWORD || 'curio-demo')
-                if (!res.ok) setError(res.error ?? 'Sign-in failed.')
-                else router.push(a.role === 'artist' ? '/artist-dashboard' : '/discover')
-              })
-            }
+            onClick={() => enter(a)}
           >
             {a.label}
           </button>

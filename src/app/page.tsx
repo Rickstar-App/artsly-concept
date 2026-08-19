@@ -77,7 +77,7 @@ export default async function HomePage() {
 
       {/* ── 2. How it works (§34.3) ─────────────────────────────────────── */}
       <section className="page section">
-        <p className="eyebrow">How it works</p>
+        <h2 className="eyebrow">How it works</h2>
         <ol className="how-grid">
           {[
             ['01', 'Tell us your taste', 'A 90-second quiz about your space, your colours, and how bold you want to go.'],
@@ -158,7 +158,7 @@ export default async function HomePage() {
 
       {/* ── 6. How pricing works (§34.2 item 6, §6.7) ───────────────────── */}
       <section className="page section">
-        <p className="eyebrow">How pricing works</p>
+        <h2 className="eyebrow">How pricing works</h2>
         <div className="pricing-block">
           <div className="pricing-col">
             <h3 className="pricing-col-title">Rent it</h3>

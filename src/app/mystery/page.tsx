@@ -30,6 +30,10 @@ export default function MysteryLanding() {
 
       {/* §24.1 — how it works in three beats. */}
       <section className="section">
+        {/* §45 semantic HTML: this heading closes an h1 -> h3 jump in the
+            document outline. Styled as an eyebrow, but it IS the section head. */}
+        <h2 className="eyebrow">How it works</h2>
+        <div style={{ height: 20 }} />
         <ol className="how-grid mystery-beats">
           {[
             ['Tell us', 'Nine quick questions: style, colour, size, how many, how bold, and your budget.'],
@@ -47,7 +51,7 @@ export default function MysteryLanding() {
 
       {/* §24.2 — THE ONE RULE, stated to the user, not just to the engineer. */}
       <section className="section mystery-rule">
-        <p className="eyebrow">The one rule</p>
+        <h2 className="eyebrow">The one rule</h2>
         <p className="mystery-rule-copy">
           The surprise is the <em>artwork</em> — never your preferences. If you ask for
           calm, blue and large, that is exactly what arrives. You just won’t know which

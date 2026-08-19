@@ -44,3 +44,4 @@ yarn-error.log*
 # DESIGN.md and README.md (agentRules is disabled in next.config.ts).
 /AGENTS.md
 /CLAUDE.md
+.gstack/

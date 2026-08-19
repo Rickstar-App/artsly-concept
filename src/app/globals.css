@@ -1461,3 +1461,57 @@ img, svg, video { display: block; max-width: 100%; }
 @media (max-width: 900px) { .add-preview { border-left: 0; padding-left: 0; border-top: 1px solid var(--border); padding-top: 24px; } }
 .add-share { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 4px; }
 .add-share p { margin: 0; font-size: var(--fs-sm); color: var(--text-muted); }
+
+/* ============================================================================
+   §45 TOUCH TARGETS — 44x44 minimum below 900px.
+   The audit found 15+ sub-40px targets on every page: header nav links, footer
+   links and breadcrumbs all sized to their text. Text-sized hit areas are the
+   most common mobile accessibility failure and the easiest to fix.
+   ========================================================================= */
+@media (max-width: 900px) {
+  .nav-link,
+  .site-footer a,
+  .breadcrumb a,
+  .past-title,
+  .past-artist,
+  .artwork-card-artist,
+  .dash-work-title,
+  .inline-link,
+  .link-button {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+  /* Inline links inside a sentence must not break the line box. */
+  .inline-link, .link-button { min-height: 0; padding-block: 10px; }
+  .wordmark { display: inline-flex; align-items: center; min-height: 44px; }
+  .segmented-item { min-height: 44px; }
+  .toast-close { width: 44px; height: 44px; }
+  .stat, .earnings-block { padding: 16px 18px; }
+
+  /* Compact buttons are 36px by design on desktop; on touch they must still
+     clear 44px. This is the single biggest remaining offender — "Filters",
+     "See all", "Sign out" are all compact. */
+  .btn-compact { min-height: 44px; }
+
+  /* Tag chips on the detail page are links into filtered views, so they are
+     real navigation and need a real target. */
+  .chip-link { min-height: 40px; padding-inline: 14px; }
+
+  /* Byline and table-cell links: text-sized by default, but they are the only
+     route to the artist page from the detail view and to a piece from the
+     artist dashboard. */
+  .detail-artist,
+  .artist-strip-name a,
+  .activity-table tbody th a,
+  .rental-card-artist,
+  .reveal-card-artist {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  /* The full-size save toggle on the detail page (the compact variant on cards
+     is already sized). */
+  .save-toggle { width: 44px; height: 44px; }
+}
