@@ -13,6 +13,7 @@ export default function ArtistsPage() {
         Ten emerging artists. Every piece here is a single original, made by one of them.
         {' '}{ARTIST_PITCH}
       </p>
+      <h2 className="sr-only">All artists</h2>
       <div className="artist-grid">
         {ARTISTS.map((a) => <ArtistCard key={a.id} artist={a} works={worksOf(a.id).slice(0, 3)} />)}
       </div>

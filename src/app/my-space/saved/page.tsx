@@ -43,6 +43,7 @@ export default async function SavedPage() {
         <p className="result-count tnum">{items.length} {items.length === 1 ? 'piece' : 'pieces'}</p>
       </div>
       <div style={{ height: 20 }} />
+      <h2 className="sr-only">Saved artwork</h2>
       {items.length > 0 ? <ArtworkGrid items={items} eagerCount={4} /> : <EmptyState {...EMPTY.saved} />}
     </div>
   )

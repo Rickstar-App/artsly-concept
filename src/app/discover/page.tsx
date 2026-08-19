@@ -103,6 +103,7 @@ export default async function DiscoverPage({ searchParams }: { searchParams: Pro
       <div className="page section-top">
         <h1 className="page-title">Artists</h1>
         <DiscoverTabs tab={tab} />
+        <h2 className="sr-only">All artists</h2>
         <div className="artist-grid">
           {ARTISTS.map((a) => <ArtistCard key={a.id} artist={a} works={worksOf(a.id).slice(0, 3)} />)}
         </div>

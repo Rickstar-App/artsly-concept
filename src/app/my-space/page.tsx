@@ -91,6 +91,7 @@ export default async function MySpacePage() {
 
       {/* ── Current collection ─────────────────────────────────────────── */}
       <section className="section-first">
+        <h2 className="sr-only">On your walls now</h2>
         {active.length === 0 && inTransit.length === 0 ? (
           <EmptyState {...EMPTY.current} />
         ) : (

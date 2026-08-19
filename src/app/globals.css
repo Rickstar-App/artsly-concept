@@ -1516,4 +1516,8 @@ img, svg, video { display: block; max-width: 100%; }
   /* The full-size save toggle on the detail page (the compact variant on cards
      is already sized). */
   .save-toggle { width: 44px; height: 44px; }
+
+  /* My Space card titles are the primary route into a piece from the dashboard. */
+  .rental-card-title a,
+  .reveal-card-title a { display: inline-flex; align-items: center; min-height: 44px; }
 }
