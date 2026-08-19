@@ -248,7 +248,7 @@ export const PIECE_TYPE_LABEL: Record<PieceType, string> = {
 export const PIECE_TYPE_DESC: Record<PieceType, string> = {
   'curated': 'Chosen from our library of existing work by emerging artists.',
   'custom': 'Newly commissioned. An artist creates it for your brief.',
-  'surprise': "We decide — existing or commissioned — whichever fits your brief best.",
+  'surprise': 'We decide — existing or commissioned — whichever fits your brief best.',
 }
 
 // ---------------------------------------------------------------------------
@@ -259,8 +259,8 @@ export type ReturnReason = (typeof RETURN_REASONS)[number]
 
 export const RETURN_REASON_LABEL: Record<ReturnReason, string> = {
   'different': 'I want something different',
-  'space': "Didn't fit my space",
-  'style': "Didn't like the style",
+  'space': 'Didn’t fit my space',
+  'style': 'Didn’t like the style',
   'price': 'Too expensive',
   'other': 'Other',
 }

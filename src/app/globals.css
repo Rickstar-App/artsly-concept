@@ -806,9 +806,24 @@ img, svg, video { display: block; max-width: 100%; }
 .detail-grid { display: grid; gap: 48px; grid-template-columns: minmax(0, 1.25fr) minmax(340px, 0.85fr); align-items: start; }
 @media (max-width: 1000px) { .detail-grid { grid-template-columns: 1fr; gap: 32px; } }
 
+/*
+ * The frame reserves the artwork's true aspect ratio via an inline style, which
+ * is what prevents layout shift while the image loads. On the detail page we
+ * also fix a height — and an element with BOTH `aspect-ratio` and `height` set
+ * derives its WIDTH from the ratio. A 48x36 piece at 52vh therefore computed to
+ * 585px inside a 342px column and pushed the whole page sideways, 253px of
+ * horizontal scroll at 390px. §36 and §48 both forbid that.
+ *
+ * Height wins here; the ratio is released.
+ */
 .detail-frame { height: min(62vh, 620px); }
 @media (max-width: 1000px) { .detail-frame { height: 52vh; } }
-.detail-frame.artwork-frame { border: 0; border-radius: 0; background: transparent; }
+.detail-frame.artwork-frame {
+  border: 0; border-radius: 0; background: transparent;
+  aspect-ratio: auto !important;
+  width: 100%;
+  max-width: 100%;
+}
 .detail-frame .artwork-img { padding: 0; background: transparent; }
 
 .detail-caption { margin-top: 16px; display: flex; flex-wrap: wrap; gap: 4px 24px; }

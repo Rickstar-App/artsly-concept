@@ -26,7 +26,6 @@ import {
   boldnessLabel, joinLabels,
   type BudgetBand, type ChangeFrequency, type Color, type Mood, type Size, type Style, type UserRoom,
 } from '@/lib/taxonomy'
-import { PROMOTE_THRESHOLD, DEMOTE_THRESHOLD } from '@/lib/recommend/affinity'
 import { savePreferences, undoPreferenceShift } from '@/lib/actions/preferences'
 import { MultiSelectChips } from './MultiSelectChips'
 import { BoldnessSlider } from './BoldnessSlider'
@@ -36,10 +35,12 @@ import { toast } from '@/components/ui/Toast'
 type Field = 'room' | 'styles' | 'colors' | 'moods' | 'boldness' | 'size_preference' | 'change_frequency' | 'budget_band'
 
 export function TasteProfile({
-  preferences, affinity,
+  preferences, affinity, announced,
 }: {
   preferences: UserPreferences | null
   affinity: Array<{ tag_type: 'style' | 'color' | 'mood'; tag: string; weight: number }>
+  /** §13.4 — `${kind}:${tag_type}:${tag}` for every shift the system made. */
+  announced: string[]
 }) {
   const router = useRouter()
   const [editing, setEditing] = useState<Field | null>(null)
@@ -76,17 +77,18 @@ export function TasteProfile({
     })
   }
 
-  // §13.4 — tags the system moved on its own, surfaced with their reason.
-  const learned = affinity
-    .filter((a) => a.weight >= PROMOTE_THRESHOLD || a.weight <= DEMOTE_THRESHOLD)
-    .map((a) => {
-      const list = a.tag_type === 'style' ? draft.styles : a.tag_type === 'color' ? draft.colors : draft.moods
-      const declared = (list as string[]).includes(a.tag)
-      const added = a.weight >= PROMOTE_THRESHOLD && declared
-      const removed = a.weight <= DEMOTE_THRESHOLD && !declared
-      return { ...a, added, removed }
+  // §13.4 — ONLY tags the system actually moved. `announced` is the authoritative
+  // record, written at the moment the threshold was crossed. Recomputing this
+  // from affinity weight alone credited the system with every tag the user had
+  // picked in the survey, which is wrong on the facts and reads as the product
+  // taking credit for the user's own answers.
+  const weightOf = new Map(affinity.map((a) => [`${a.tag_type}:${a.tag}`, a.weight]))
+  const learned = announced
+    .map((key) => {
+      const [kind, tag_type, tag] = key.split(':') as ['added' | 'removed', 'style' | 'color' | 'mood', string]
+      return { kind, tag_type, tag, weight: weightOf.get(`${tag_type}:${tag}`) ?? 0 }
     })
-    .filter((a) => a.added || a.removed)
+    .filter((l) => l.tag && (l.kind === 'added' || l.kind === 'removed'))
 
   return (
     <>
@@ -215,21 +217,21 @@ export function TasteProfile({
             {learned.map((l) => (
               <li key={`${l.tag_type}:${l.tag}`} className="learned-row">
                 <span className="learned-tag">
-                  {l.added ? '+ ' : '– '}
-                  {l.tag_type === 'style' ? STYLE_LABEL[l.tag as Style]
-                    : l.tag_type === 'color' ? COLOR_LABEL[l.tag as Color]
-                    : MOOD_LABEL[l.tag as Mood]}
+                  {l.kind === 'added' ? '+ ' : '– '}
+                  {labelOf(l.tag_type, l.tag)}
                 </span>
                 <span className="learned-why">
-                  {l.added
-                    ? `we added this after you kept saving ${l.tag} pieces`
-                    : `we removed this after you kept passing on ${l.tag} pieces`}
+                  {/* The human LABEL, never the slug — the chip above already
+                      gets this right and the sentence must agree with it. */}
+                  {l.kind === 'added'
+                    ? `we added this after you kept saving ${labelOf(l.tag_type, l.tag).toLowerCase()} pieces`
+                    : `we removed this after you kept passing on ${labelOf(l.tag_type, l.tag).toLowerCase()} pieces`}
                 </span>
                 <span className="learned-actions">
                   <button type="button" className="btn btn-ghost btn-compact" disabled={pending}
                     onClick={() =>
                       start(async () => {
-                        await undoPreferenceShift(l.tag_type, l.tag, l.added ? 'added' : 'removed')
+                        await undoPreferenceShift(l.tag_type, l.tag, l.kind)
                         toast({ title: 'Reverted.', tone: 'default' })
                         router.refresh()
                       })
@@ -248,6 +250,12 @@ export function TasteProfile({
       </div>
     </>
   )
+}
+
+function labelOf(type: 'style' | 'color' | 'mood', tag: string): string {
+  if (type === 'style') return STYLE_LABEL[tag as Style] ?? tag
+  if (type === 'color') return COLOR_LABEL[tag as Color] ?? tag
+  return MOOD_LABEL[tag as Mood] ?? tag
 }
 
 function TasteRow({

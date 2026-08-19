@@ -25,6 +25,10 @@ export default async function TastePage() {
       <TasteProfile
         preferences={state.preferences}
         affinity={state.affinity.map((a) => ({ tag_type: a.tag_type, tag: a.tag, weight: a.weight }))}
+        // §13.4 — the record of shifts the SYSTEM made. Deriving this from
+        // weight alone credited the system with tags the user picked in the
+        // survey, which is both wrong and slightly insulting.
+        announced={state.announced}
       />
     </div>
   )
