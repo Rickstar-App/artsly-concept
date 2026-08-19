@@ -7,7 +7,7 @@
  *   │ Because you like       │   ← reason chip, small caps
  *   │ abstract art           │
  *   │ Blue Horizon        ♡  │   ← title + save toggle
- *   │ Maya Chen              │   ← artist, links to profile
+ *   │ Maya Puterman          │   ← artist, links to profile
  *   │ Abstract · Calm · Blue │   ← up to 3 tag labels
  *   │ From $49/mo            │   ← floor(rental_12m / 12)
  *   │ $1,200 to own          │   ← ALWAYS shown alongside

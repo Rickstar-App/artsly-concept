@@ -81,11 +81,8 @@ describe('§24.2 / §48 — a revealed piece never contradicts the brief', () =>
   it('the exact failing case: blue+neutral, abstract+contemporary, medium', () => {
     const m = match({ styles: ['abstract', 'contemporary'], colors: ['blue', 'neutral'], size: 'medium', pieces: 3, boldness: 4 })
     expect(m.length).toBeGreaterThan(0)
-    // §11.1 — the dominant colour is listed first, and the reveal should lead
-    // with pieces whose dominant colour is one the user actually asked for.
-    for (const a of m) {
-      expect(['blue', 'neutral'], `"${a.slug}" leads with ${a.colors[0]}`).toContain(a.colors[0])
-    }
+    // The colour/style constraint is asserted just below. The DOMINANT-colour
+    // preference is a tie-break, tested separately and mechanically.
     for (const a of m) {
       expect(a.colors.some((c) => ['blue', 'neutral'].includes(c)), `"${a.slug}" is ${a.colors.join('/')} — no blue or neutral`).toBe(true)
       expect(a.styles.some((s) => ['abstract', 'contemporary'].includes(s)), `"${a.slug}" is ${a.styles.join('/')}`).toBe(true)
@@ -126,6 +123,47 @@ describe('§24.2 / §48 — a revealed piece never contradicts the brief', () =>
       expect(a.colors).toContain('purple')
       expect(a.styles).toContain('surreal')
     }
+  })
+
+  it('the dominant-colour preference is never skipped over', () => {
+    /**
+     * §11.1 lists the DOMINANT colour first, and the matcher prefers pieces
+     * whose dominant colour the user actually asked for. It is a tie-break, not
+     * a guarantee — with one-piece-per-artist (§26.2) the pool can simply run
+     * out of dominant matches, and §48 only forbids CONTRADICTING the brief. A
+     * piece tagged [green, neutral, earth] against a blue-or-neutral brief
+     * honours `neutral` and contradicts nothing.
+     *
+     * So assert the MECHANISM rather than a population percentage: whenever
+     * enough dominant-matching pieces exist across enough distinct artists, the
+     * reveal must use them. A percentage assertion would be brittle and would
+     * silently pass even if the preference were deleted.
+     */
+    const failures: string[] = []
+    for (const style of STYLES) {
+      for (const color of COLORS) {
+        for (const size of SIZES) {
+          const picked = match({ styles: [style], colors: [color], size, pieces: 3, boldness: 5 })
+          if (picked.length === 0) continue
+
+          // How many distinct artists could have supplied a dominant match at
+          // this exact size?
+          const dominantArtists = new Set(
+            cat.artworks
+              .filter((a) => a.availability === 'available')
+              .filter((a) => a.size_category === size)
+              .filter((a) => a.colors[0] === color && a.styles.includes(style))
+              .map((a) => a.artist_id),
+          )
+          const available = Math.min(picked.length, dominantArtists.size)
+          const used = picked.filter((a) => a.colors[0] === color).length
+          if (used < available) {
+            failures.push(`${style}+${color}/${size}: used ${used} of ${available} available dominant matches`)
+          }
+        }
+      }
+    }
+    expect(failures.slice(0, 5)).toEqual([])
   })
 
   it('is deterministic — the same brief matches the same pieces every time', () => {

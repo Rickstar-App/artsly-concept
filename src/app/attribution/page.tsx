@@ -24,9 +24,9 @@ export default function AttributionPage() {
 
       <div className="prose-block">
         <p className="lede">
-          This is a demonstration build. The {ARTISTS.length} artists shown are fictional,
-          and all {ARTWORKS.length} artwork images are procedurally generated for this
-          prototype.
+          This is a demonstration build. The practices, biographies, locations and
+          artworks attached to the {ARTISTS.length} artists shown are invented, and all
+          {' '}{ARTWORKS.length} images are procedurally generated for this prototype.
         </p>
 
         <h2>Why generated, not licensed</h2>
@@ -62,9 +62,10 @@ export default function AttributionPage() {
 
         <h2>Artists</h2>
         <p>
-          Every artist name, biography, location and body of work on this site is invented
-          for the demonstration. Any resemblance to a real artist is coincidental. Their
-          profiles carry a “Demo artist” chip for exactly this reason.
+          Every biography, location, medium and artwork on this site is invented for the
+          demonstration. Nothing here describes a real practice, and no work shown was
+          made by the person it is attributed to. Every profile carries a “Demo artist”
+          chip for exactly that reason.
         </p>
       </div>
     </div>

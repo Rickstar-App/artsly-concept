@@ -114,14 +114,14 @@ the Postgres path wired up.
 
 ## Seed data and artwork
 
-10 artists, 65 artworks, **every §11.2 coverage floor enforced in CI**:
+17 artists, 100 artworks, **every §11.2 coverage floor enforced in CI**:
 
 ```
 styles   ≥3 each      colours  ≥4 each      moods   ≥5 each      rooms ≥8 each
 sizes    ≥8 each      budget bands ≥6 each  boldness ≥4 per band
 ```
 
-All 65 images are **procedurally generated** by `scripts/art/` — twelve distinct
+All 100 images are **procedurally generated** by `scripts/art/` — twelve distinct
 algorithms, one per style family, each seeded from its artwork's slug so runs are
 reproducible. The palette is driven by each piece's own colour tags, so a piece
 tagged `blue` is visibly blue and §12's colour scoring is legible on screen
@@ -227,8 +227,15 @@ prorated price (§41.5) rather than one that breaks the promise.
 §37.1 constrains every artist to 5–8 works; §38.2 illustrates Maya's dashboard
 with 12 pieces / 7 on loan / 2 sold. The binding requirement is §30.1's — that
 every figure *derives* from real data, which is the whole point of §0.1 defect
-#17. The dashboard shows her real counts (8 / 3 / 1) rather than inflating the
-seed past an explicit constraint.
+#17. The dashboard shows the real counts rather than inflating the seed past an
+explicit constraint.
+
+**3b. The roster is 17 artists, not §37.6's 10.** The names are real people, so
+the roster was sized to the list rather than the spec's table. §37.1's 5–8 works
+per artist still holds, which is why the catalogue is 100 pieces rather than 65.
+Every practice, biography, location and artwork attached to those names is
+invented, and no bio uses a gendered pronoun — a name does not tell you someone's
+pronouns.
 
 **4. All imagery is generated** — `ATTRIBUTION.md`
 

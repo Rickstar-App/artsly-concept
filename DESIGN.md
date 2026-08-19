@@ -73,9 +73,16 @@ is declared so browser UI does not force-invert form controls.
 
 | Role | Family | Notes |
 |---|---|---|
-| Display / headings | **Fraunces** (variable serif) | `opsz` axis, `SOFT 0`, `WONK 0`. Editorial, warm, slightly literary. |
-| Body / UI | **Inter** (variable) | 16px minimum, `line-height: 1.6` for prose. |
-| Numerals | **JetBrains Mono** | Prices, countdowns, dimensions, earnings tables. |
+| Display / headings | **Newsreader** | Low-contrast literary serif with a real `opsz` axis — the hero and a caption are different cuts, not one shape scaled. Weight 500 on headings; it sets lighter than most serifs. |
+| Body / UI | **Hanken Grotesk** | Humanist, not neo-grotesque: open apertures, a friendlier `a` and `g`. 16px minimum, `line-height: 1.6` for prose. |
+| Numerals | **Spline Sans Mono** | Prices, countdowns, dimensions, earnings tables. Narrow, even colour. |
+
+**These were chosen partly for what they are not.** Inter, Playfair, Fraunces,
+Poppins and JetBrains Mono are the default vocabulary of generated interfaces —
+a page built from them announces its origin before you read a word. All three
+faces here are uncommon in that context and each earns its place: Newsreader for
+optical sizing, Hanken Grotesk for warmth where Inter is neutral, Spline Sans
+Mono for figures that hold a column. Do not substitute a "safe" alternative.
 
 Money and countdowns are **always** monospace or tabular-figure. Columns of
 money must align on the decimal, and a countdown must not jitter as digits change.

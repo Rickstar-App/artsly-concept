@@ -57,8 +57,9 @@ export function SiteFooter({ viewer }: { viewer: ViewerSummary }) {
 
         {/* §37.4 — required disclosure. Always visible, on every page. */}
         <p className="footer-disclosure">
-          Demo build. Artists shown are fictional; artwork imagery is generated for this
-          prototype. <Link href="/attribution">Full attribution</Link>.
+          Demo build. Artist profiles, biographies and artworks are invented for this
+          prototype, and all imagery is procedurally generated.
+          {' '}<Link href="/attribution">Full attribution</Link>.
         </p>
       </div>
     </footer>

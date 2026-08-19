@@ -4,7 +4,7 @@
  * RENTAL CARD — PRD §18.1, §18.2.
  *
  *   │ Blue Horizon │
- *   │ Maya Chen    │
+ *   │ Maya Puterman│
  *   │ 23 days left │
  *   │ ████████░░░░ │
  *   │ [Buy] [Extend]│

@@ -22,7 +22,7 @@ const ALEX: ScoreProfile = {
   budget_max: 100,
 }
 
-// §12.7 — Artwork A: "Blue Horizon" (Maya Chen), purchase $1,200
+// §12.7 — Artwork A: "Blue Horizon" (Maya Puterman), purchase $1,200
 const BLUE_HORIZON: ScoreArtwork = {
   id: 'a', artist_id: 'maya',
   styles: ['abstract', 'contemporary'],
@@ -34,7 +34,7 @@ const BLUE_HORIZON: ScoreArtwork = {
   comparison_price: 20000 / 3 / 100, // rental_3m $200 / 3 = $66.67
 }
 
-// §12.7 — Artwork B: "Ferry Light" (Layla Thompson), purchase $600
+// §12.7 — Artwork B: "Ferry Light" (Reilly Snyder), purchase $600
 const FERRY_LIGHT: ScoreArtwork = {
   id: 'b', artist_id: 'layla',
   styles: ['photography', 'landscape'],

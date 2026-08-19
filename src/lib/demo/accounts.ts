@@ -42,11 +42,11 @@ export const DEMO_ACCOUNTS: DemoAccount[] = [
   {
     id: 'demo-maya',
     email: DEMO_EMAILS.artist,
-    display_name: 'Maya Chen',
+    display_name: 'Maya Puterman',
     role: 'artist',
-    artist_id: 'maya-chen',
+    artist_id: 'maya-puterman',
     label: 'Sign in as Maya (artist demo)',
-    sublabel: 'Artist · 8 pieces, rental and sale earnings',
+    sublabel: 'Artist · rental and sale earnings at the 60/70 split',
   },
 ]
 

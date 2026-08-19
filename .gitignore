@@ -45,3 +45,4 @@ yarn-error.log*
 /AGENTS.md
 /CLAUDE.md
 .gstack/
+.env*

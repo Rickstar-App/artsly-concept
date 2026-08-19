@@ -33,7 +33,7 @@ interface Catalog {
 const FLOORS = {
   style: 3, color: 4, mood: 5, room: 8,
   size: 8, budget: 6, boldnessBand: 4,
-  minArtworks: 60, minArtists: 10, minPerArtist: 5, maxPerArtist: 8,
+  minArtworks: 85, minArtists: 17, minPerArtist: 5, maxPerArtist: 8,
 } as const
 
 export function validateCatalog(cat: Catalog): string[] {
@@ -43,8 +43,8 @@ export function validateCatalog(cat: Catalog): string[] {
   const { artists, artworks } = cat
 
   // ---- volume (§37.1) ----------------------------------------------------
-  if (artists.length < FLOORS.minArtists) E(`Only ${artists.length} artists; §37.1 requires ${FLOORS.minArtists}.`)
-  if (artworks.length < FLOORS.minArtworks) E(`Only ${artworks.length} artworks; §37.1 requires ${FLOORS.minArtworks}.`)
+  if (artists.length < FLOORS.minArtists) E(`Only ${artists.length} artists; the roster is ${FLOORS.minArtists}.`)
+  if (artworks.length < FLOORS.minArtworks) E(`Only ${artworks.length} artworks; ${FLOORS.minArtists} artists x ${FLOORS.minPerArtist} is ${FLOORS.minArtworks}.`)
 
   const perArtist = new Map<string, number>()
   for (const a of artworks) {

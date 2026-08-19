@@ -42,9 +42,9 @@
   --shadow-pop: 0 1px 2px rgb(26 24 21 / 0.04), 0 12px 32px -8px rgb(26 24 21 / 0.14);
 
   /* --- Type (§3) ---------------------------------------------------------- */
-  --font-display: var(--font-fraunces), ui-serif, Georgia, "Times New Roman", serif;
-  --font-body:    var(--font-inter), ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-mono:    var(--font-jetbrains), ui-monospace, "SF Mono", Menlo, monospace;
+  --font-display: var(--font-display-face), ui-serif, Georgia, "Times New Roman", serif;
+  --font-body:    var(--font-body-face), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono:    var(--font-mono-face), ui-monospace, "SF Mono", Menlo, monospace;
 
   --fs-xs:   0.75rem;   /* 12 */
   --fs-sm:   0.875rem;  /* 14 */
@@ -126,6 +126,9 @@ body {
   font-family: var(--font-body);
   font-size: var(--fs-base);
   line-height: 1.6;
+  /* Hanken Grotesk's default figures are proportional; prices and countdowns
+     opt into tabular via .tnum, everything else reads better proportional. */
+  font-optical-sizing: auto;
   font-synthesis-weight: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -135,9 +138,12 @@ body {
 
 h1, h2, h3, h4 {
   font-family: var(--font-display);
+  /* Newsreader sets lighter than Fraunces at the same numeric weight, and its
+     optical-size axis wants to run large on display copy. */
   font-weight: 500;
-  line-height: 1.12;
-  letter-spacing: -0.02em;
+  font-optical-sizing: auto;
+  line-height: 1.14;
+  letter-spacing: -0.015em;
   margin: 0;
   text-wrap: balance;
 }
@@ -379,7 +385,7 @@ img, svg, video { display: block; max-width: 100%; }
   font-family: var(--font-display);
   font-size: var(--fs-xl);
   font-weight: 600;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.02em;
   color: var(--text);
   flex-shrink: 0;
 }
@@ -679,7 +685,7 @@ img, svg, video { display: block; max-width: 100%; }
   display: flex; align-items: baseline; justify-content: space-between; gap: 16px;
   margin-bottom: 24px; flex-wrap: wrap;
 }
-.section-title { font-size: var(--fs-xl); letter-spacing: -0.02em; }
+.section-title { font-size: var(--fs-xl); font-weight: 500; letter-spacing: -0.015em; }
 .section-note { margin: -12px 0 24px; font-size: var(--fs-sm); color: var(--text-muted); }
 .inline-link { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
 .inline-link:hover { color: var(--accent-hover); }
@@ -951,7 +957,7 @@ img, svg, video { display: block; max-width: 100%; }
    ========================================================================= */
 
 .section-top { padding-top: 32px; }
-.page-title { font-size: var(--fs-2xl); letter-spacing: -0.03em; }
+.page-title { font-size: var(--fs-2xl); font-weight: 500; letter-spacing: -0.022em; }
 .section-first { margin-top: 32px; }
 .result-count { font-size: var(--fs-sm); color: var(--text-muted); white-space: nowrap; }
 
@@ -1520,4 +1526,8 @@ img, svg, video { display: block; max-width: 100%; }
   /* My Space card titles are the primary route into a piece from the dashboard. */
   .rental-card-title a,
   .reveal-card-title a { display: inline-flex; align-items: center; min-height: 44px; }
+
+  /* The commission badge on the artist strip is a LINK into the Mystery flow,
+     not decoration, so it needs a real target rather than badge height. */
+  .artist-strip-badges a { display: inline-flex; align-items: center; min-height: 44px; }
 }

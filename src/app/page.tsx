@@ -100,7 +100,7 @@ export default async function HomePage() {
           <h2 className="section-title">
             {feed.coldStart ? 'Featured this week' : 'Picked for you'}
           </h2>
-          <Link href="/discover" className="btn btn-ghost btn-compact">See all 65 pieces →</Link>
+          <Link href="/discover" className="btn btn-ghost btn-compact">See all {ARTWORKS.length} pieces →</Link>
         </div>
         {/* §12.11 — never claim personalisation we don't have. */}
         {feed.coldStart ? (
@@ -116,7 +116,7 @@ export default async function HomePage() {
       <section className="page section">
         <div className="section-head">
           <h2 className="section-title">Artists on Curio</h2>
-          <Link href="/artists" className="btn btn-ghost btn-compact">All 10 artists →</Link>
+          <Link href="/artists" className="btn btn-ghost btn-compact">All {ARTISTS.length} artists →</Link>
         </div>
         <div className="artist-grid">
           {featuredArtists.map((a) => (
@@ -180,7 +180,7 @@ export default async function HomePage() {
             <p>{NO_CREDIT_COPY}</p>
             <p className="pricing-example">
               Prices shown for <Link href="/artwork/blue-horizon" className="inline-link">“{bh.title}”</Link>,
-              a {bh.width_in} × {bh.height_in} in piece by Maya Chen.
+              a {bh.width_in} × {bh.height_in} in piece by Maya Puterman.
             </p>
           </div>
         </div>

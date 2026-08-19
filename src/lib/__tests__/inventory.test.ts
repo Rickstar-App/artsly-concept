@@ -98,7 +98,7 @@ describe('§23.3 / §48 — one artwork, one home', () => {
     const s = session()
     s.matches.push({
       id: 'm1', subscription_id: 'sub1', cycle: 1, kind: 'curated',
-      artist_id: 'maya-chen', artwork_id: 'blue-horizon', match_score: 100,
+      artist_id: 'maya-puterman', artwork_id: 'blue-horizon', match_score: 100,
       selected: false, revealed_at: null, created_at: new Date().toISOString(),
     })
     expect(availabilityOverlay(s).get('blue-horizon')).toBe('reserved')
@@ -109,7 +109,7 @@ describe('§23.3 / §48 — one artwork, one home', () => {
     const s = session()
     s.matches.push({
       id: 'm1', subscription_id: 'sub1', cycle: 1, kind: 'curated',
-      artist_id: 'maya-chen', artwork_id: 'blue-horizon', match_score: 100,
+      artist_id: 'maya-puterman', artwork_id: 'blue-horizon', match_score: 100,
       selected: false, revealed_at: null,
       created_at: new Date(Date.now() - 25 * 3_600_000).toISOString(),
     })
