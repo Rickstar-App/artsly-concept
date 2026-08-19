@@ -10,8 +10,8 @@ export function SiteHeader({ viewer }: { viewer: ViewerSummary }) {
   return (
     <header className="site-header">
       <div className="page site-header-inner">
-        <Link href="/" className="wordmark" aria-label="Curio, home">
-          Curio
+        <Link href="/" className="wordmark" aria-label="Artsly, home">
+          Artsly
         </Link>
 
         <nav className="nav-primary" aria-label="Primary">

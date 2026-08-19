@@ -1,4 +1,4 @@
-# Curio — Design System
+# Artsly — Design System
 
 Normative. Read before any visual decision. Deviations require explicit approval.
 Source of truth for tokens: `src/app/globals.css`. This document explains *why*;

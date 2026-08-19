@@ -26,7 +26,7 @@ import { BoldnessSlider } from './BoldnessSlider'
 import { MultiSelectChips } from './MultiSelectChips'
 import { savePreferences } from '@/lib/actions/preferences'
 
-const DRAFT_KEY = 'curio:survey-draft'
+const DRAFT_KEY = 'artsly:survey-draft'
 
 interface Draft {
   room?: UserRoom

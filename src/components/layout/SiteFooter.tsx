@@ -21,7 +21,7 @@ export function SiteFooter({ viewer }: { viewer: ViewerSummary }) {
       <div className="page">
         <div className="footer-grid">
           <div>
-            <p className="wordmark footer-wordmark">Curio</p>
+            <p className="wordmark footer-wordmark">Artsly</p>
             <p className="footer-tagline">
               Discover, rent, and rotate original art from emerging artists.
               Shipping included, both ways.

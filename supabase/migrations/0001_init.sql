@@ -1,5 +1,5 @@
 -- ===========================================================================
--- CURIO — INITIAL SCHEMA
+-- ARTSLY — INITIAL SCHEMA
 -- PRD §31 (data model), §32 (auth, roles, RLS), §9 (taxonomy CHECK constraints)
 --
 -- ONE CANONICAL SCHEMA. v1.0 had two disagreeing ones (§0.1 defect #5): its §9

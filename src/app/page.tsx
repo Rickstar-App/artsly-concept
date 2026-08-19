@@ -115,7 +115,7 @@ export default async function HomePage() {
       {/* ── 4. Featured artists (§6.5) ──────────────────────────────────── */}
       <section className="page section">
         <div className="section-head">
-          <h2 className="section-title">Artists on Curio</h2>
+          <h2 className="section-title">Artists on Artsly</h2>
           <Link href="/artists" className="btn btn-ghost btn-compact">All {ARTISTS.length} artists →</Link>
         </div>
         <div className="artist-grid">

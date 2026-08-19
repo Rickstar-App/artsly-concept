@@ -17,7 +17,7 @@ import { seal, unseal, newId } from '../auth/crypto'
 import { emptyState, isValidState, type SessionState } from './state'
 import type { UserRole } from '../taxonomy'
 
-export const SESSION_COOKIE = 'curio_session'
+export const SESSION_COOKIE = 'artsly_session'
 
 /** Browsers cap a cookie at ~4 KB including name and attributes. */
 const MAX_COOKIE_BYTES = 3_800
@@ -57,7 +57,7 @@ export async function writeSession(state: SessionState): Promise<void> {
 
   if (token.length > MAX_COOKIE_BYTES) {
     // Never silently drop a write. Loud, and still best-effort.
-    console.warn(`[curio] session cookie is ${token.length}B, above the ${MAX_COOKIE_BYTES}B budget.`)
+    console.warn(`[artsly] session cookie is ${token.length}B, above the ${MAX_COOKIE_BYTES}B budget.`)
   }
 
   const jar = await cookies()

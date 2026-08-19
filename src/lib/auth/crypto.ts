@@ -15,16 +15,16 @@ import { gzipSync, gunzipSync } from 'node:zlib'
  * clone runs without configuration; it is a DEV-ONLY value and the app logs
  * loudly in production if it is still in use.
  */
-const DEV_SECRET = 'curio-dev-secret-do-not-use-in-production'
+const DEV_SECRET = 'artsly-dev-secret-do-not-use-in-production'
 
 export function sessionSecret(): string {
   const s = process.env.SESSION_SECRET
   if (s && s.length >= 16) return s
-  if (process.env.NODE_ENV === 'production' && !process.env.CURIO_ALLOW_DEV_SECRET) {
+  if (process.env.NODE_ENV === 'production' && !process.env.ARTSLY_ALLOW_DEV_SECRET) {
     // Deliberately not fatal: a demo build must not hard-crash on a missing
     // env var. It is loud instead.
     console.warn(
-      '[curio] SESSION_SECRET is unset in production. Sessions are signed with a ' +
+      '[artsly] SESSION_SECRET is unset in production. Sessions are signed with a ' +
       'public development key. Set SESSION_SECRET in your Vercel project settings.',
     )
   }
@@ -81,7 +81,7 @@ export function newId(prefix = ''): string {
  * "users can only modify their own rentals" (§44) is resolved.
  */
 export function demoPassword(): string {
-  return process.env.DEMO_USER_PASSWORD || 'curio-demo'
+  return process.env.DEMO_USER_PASSWORD || 'artsly-demo'
 }
 
 export function checkPassword(given: string): boolean {

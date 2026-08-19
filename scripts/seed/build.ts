@@ -46,7 +46,7 @@ const isoDate = (d: string) => d.slice(0, 10)
 
 async function main() {
   const t0 = Date.now()
-  console.log('· Curio seed build')
+  console.log('· Artsly seed build')
 
   await rm(join(PUBLIC, 'artwork'), { recursive: true, force: true })
   await rm(join(PUBLIC, 'artists'), { recursive: true, force: true })

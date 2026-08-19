@@ -1,4 +1,4 @@
-# Curio
+# Artsly
 
 **A personalised, continuously refreshable art collection for your home.**
 

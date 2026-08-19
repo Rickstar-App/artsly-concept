@@ -23,7 +23,7 @@ export function DemoSignIn({ viewer }: { viewer: ViewerSummary }) {
   const enter = (account: (typeof DEMO_ACCOUNTS)[number]) =>
     start(async () => {
       setError(null)
-      const res = await signIn(account.email, process.env.NEXT_PUBLIC_DEMO_PASSWORD || 'curio-demo')
+      const res = await signIn(account.email, process.env.NEXT_PUBLIC_DEMO_PASSWORD || 'artsly-demo')
       if (!res.ok) setError(res.error ?? 'Sign-in failed.')
       else router.push(account.role === 'artist' ? '/artist-dashboard' : '/discover')
     })

@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /* ============================================================================
-   CURIO — DESIGN TOKENS
+   ARTSLY — DESIGN TOKENS
    Source of truth is DESIGN.md §2–§7. Nothing in this file is arbitrary.
    No component may introduce a colour, radius, duration, or font size that is
    not defined here.

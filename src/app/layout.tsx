@@ -46,13 +46,13 @@ const mono = Spline_Sans_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: 'Curio — rent art from emerging artists',
-    template: '%s · Curio',
+    default: 'Artsly — rent art from emerging artists',
+    template: '%s · Artsly',
   },
   description:
     'Discover, rent, and rotate original art from emerging artists — personalised to your taste and your space. Shipping included both ways.',
   openGraph: {
-    title: 'Curio — your walls don’t have to stay the same',
+    title: 'Artsly — your walls don’t have to stay the same',
     description: 'Discover, rent, and rotate original art from emerging artists.',
     type: 'website',
   },

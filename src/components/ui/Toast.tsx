@@ -22,7 +22,7 @@ export interface ToastPayload {
   ttl?: number
 }
 
-const EVENT = 'curio:toast'
+const EVENT = 'artsly:toast'
 
 export function toast(payload: Omit<ToastPayload, 'id'>) {
   if (typeof window === 'undefined') return
