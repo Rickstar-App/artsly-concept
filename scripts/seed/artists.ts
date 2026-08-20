@@ -35,6 +35,17 @@ export interface SeedArtist {
 
 export const ARTISTS: SeedArtist[] = [
   {
+    slug: 'tinn-belly',
+    name: 'Tinn Belly',
+    tagline: 'Cut once, spray twice, keep the mistakes.',
+    bio:
+      'Hand-cut stencils on plywood and salvaged door panels, printed in two or three passes and never registered properly on purpose. The overspray and the drips stay in — sanding them off would make it a poster. Tinn came up doing walls in West Oakland and still works standing, fast, outdoors when the weather allows.',
+    location: 'Oakland, CA',
+    mediums: ['Aerosol', 'Stencil', 'Salvaged panel'],
+    styles: ['street', 'pop'],
+    commission_available: false,
+  },
+  {
     slug: 'maya-puterman',
     name: 'Maya Puterman',
     tagline: 'Colour fields for rooms people actually live in.',
@@ -155,17 +166,6 @@ export const ARTISTS: SeedArtist[] = [
     location: 'Providence, RI',
     mediums: ['Acrylic', 'Gouache', 'Panel'],
     styles: ['surreal', 'abstract'],
-    commission_available: false,
-  },
-  {
-    slug: 'tinn-belly',
-    name: 'Tinn Belly',
-    tagline: 'Cut once, spray twice, keep the mistakes.',
-    bio:
-      'Hand-cut stencils on plywood and salvaged door panels, printed in two or three passes and never registered properly on purpose. The overspray and the drips stay in — sanding them off would make it a poster. Tinn came up doing walls in West Oakland and still works standing, fast, outdoors when the weather allows.',
-    location: 'Oakland, CA',
-    mediums: ['Aerosol', 'Stencil', 'Salvaged panel'],
-    styles: ['street', 'pop'],
     commission_available: false,
   },
   {

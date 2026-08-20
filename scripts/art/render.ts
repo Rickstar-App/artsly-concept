@@ -16,6 +16,7 @@
 
 import sharp from 'sharp'
 import { mkdir, writeFile } from 'node:fs/promises'
+import { existsSync } from 'node:fs'
 import { join } from 'node:path'
 import { Rng } from './rng'
 import { buildPalette, type ColorSlug } from './palette'
@@ -120,14 +121,56 @@ export async function renderArtwork(spec: RenderSpec, publicDir: string, artwork
 }
 
 /**
- * Artist portraits (§16, §37.6). Generated from the artist slug so the profile
- * page has a real face-shaped mark rather than an empty circle. Deliberately
- * abstract — a generated *portrait* of a fictional person would be a synthetic
- * likeness, which §37.4's disclosure requirement exists to avoid.
+ * Artist portraits (§16, §37.6).
+ *
+ * Real photographs, supplied per artist in `scripts/seed/photos/{slug}.jpg` and
+ * committed so the seed reproduces on a fresh clone with no network — the same
+ * reasoning as §37.2's "never hot-link".
+ *
+ * Cropped square from the TOP rather than the centre or by saliency. In a set of
+ * ordinary phone photos the head is reliably in the upper part of the frame,
+ * whereas sharp's attention strategy optimises for entropy and happily centres
+ * on a torso or a busy background — it kept bodies and cut off faces on the
+ * full-length shots here. Compared both across all 17; top wins outright.
+ * Falls back to the generated mark when no photo exists for a slug.
  */
 export async function renderArtistAvatar(slug: string, publicDir: string): Promise<string> {
+  const dir = join(publicDir, 'artists')
+  await mkdir(dir, { recursive: true })
+  const out = join(dir, `${slug}.webp`)
+
+  const photo = join(process.cwd(), 'scripts', 'seed', 'photos', `${slug}.jpg`)
+  if (existsSync(photo)) {
+    // Trim a uniform border first. Studio shots on white leave the subject
+    // occupying a narrow strip, so a top-crop of the raw frame returns mostly
+    // background — at 56px in a circle that reads as a speck rather than a
+    // person. Trim is a no-op on photos without a flat border, so it is safe to
+    // run over the whole set. It throws when an image is ENTIRELY uniform,
+    // hence the fallback.
+    let base = sharp(photo).rotate() // honour EXIF orientation before cropping
+    try {
+      const trimmed = await sharp(photo).rotate().trim({ threshold: 12 }).toBuffer()
+      base = sharp(trimmed)
+    } catch {
+      /* nothing to trim; use the frame as shot */
+    }
+
+    await base
+      .resize(AVATAR_PX, AVATAR_PX, { fit: 'cover', position: 'top' })
+      .webp({ quality: 86, effort: 5 })
+      .toFile(out)
+    return `/artists/${slug}.webp`
+  }
+
+  return generateArtistMark(slug, dir, out)
+}
+
+const AVATAR_PX = 480
+
+/** The generated fallback, for any artist without a supplied photograph. */
+async function generateArtistMark(slug: string, dir: string, out: string): Promise<string> {
   const rng = new Rng('artist:' + slug)
-  const size = 480
+  const size = AVATAR_PX
   const ramps = ['#8B5E3C', '#3E6B95', '#4E7A55', '#6B5591', '#A9762F', '#8C3A32']
   const a = rng.pick(ramps)
   const b = rng.pick(ramps.filter((c) => c !== a))
@@ -143,11 +186,10 @@ export async function renderArtistAvatar(slug: string, publicDir: string): Promi
     <ellipse cx="${size / 2}" cy="${size * 0.95}" rx="${size * 0.42}" ry="${size * 0.3}" fill="url(#g)" opacity="0.7"/>
     <circle cx="${size * rng.range(0.2, 0.8)}" cy="${size * rng.range(0.15, 0.5)}" r="${size * 0.14}" fill="#FAF8F5" opacity="0.35" filter="url(#s)"/>
   </svg>`
-  const dir = join(publicDir, 'artists')
-  await mkdir(dir, { recursive: true })
   const buf = await sharp(Buffer.from(svg))
     .composite([{ input: await grainLayer(size, size, new Rng(slug + ':g'), 0.7), blend: 'soft-light' }])
     .webp({ quality: 82 }).toBuffer()
-  await writeFile(join(dir, `${slug}.webp`), buf)
+  await writeFile(out, buf)
+  void dir
   return `/artists/${slug}.webp`
 }
