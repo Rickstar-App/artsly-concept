@@ -16,6 +16,7 @@
 
 import sharp from 'sharp'
 import { mkdir, writeFile } from 'node:fs/promises'
+import { createHash } from 'node:crypto'
 import { existsSync } from 'node:fs'
 import { join } from 'node:path'
 import { Rng } from './rng'
@@ -82,6 +83,27 @@ export function generatorFor(styles: string[]): GeneratorName {
   return 'colorField'
 }
 
+/**
+ * CONTENT HASH IN THE FILENAME — the thing that makes `immutable` honest.
+ *
+ * `vercel.json` serves /artwork and /artists with
+ * `Cache-Control: public, max-age=31536000, immutable`, which tells a browser
+ * the bytes at this URL will NEVER change and not to revalidate for a year.
+ *
+ * With a stable filename that promise is a lie. When the artist avatars were
+ * replaced with photographs the URL stayed `/artists/{slug}.webp`, so every
+ * browser that had already loaded the site kept serving the OLD generated mark
+ * and never asked the server for the new one. A fresh browser saw photos; a
+ * returning one saw the old images — indefinitely, with no way to fix it from
+ * the server side.
+ *
+ * Putting the content hash in the name means changed bytes produce a changed
+ * URL, which busts every existing cache and makes `immutable` true.
+ */
+function contentHash(buf: Buffer): string {
+  return createHash('sha256').update(buf).digest('hex').slice(0, 10)
+}
+
 export async function renderArtwork(spec: RenderSpec, publicDir: string, artworkId: string): Promise<RenderResult> {
   // One RNG per artwork, seeded from the slug: reproducible across runs (§37.2).
   const rng = new Rng(spec.slug)
@@ -100,19 +122,21 @@ export async function renderArtwork(spec: RenderSpec, publicDir: string, artwork
   await mkdir(dir, { recursive: true })
 
   const fullBuf = await composed.clone().webp({ quality: FULL_QUALITY, effort: 5 }).toBuffer()
-  await writeFile(join(dir, 'full.webp'), fullBuf)
+  const fullName = `full.${contentHash(fullBuf)}.webp`
+  await writeFile(join(dir, fullName), fullBuf)
 
   const [tw, th] = pixelDimensions(spec.widthIn, spec.heightIn, THUMB_EDGE)
   const thumbBuf = await sharp(fullBuf).resize(tw, th, { fit: 'fill' }).webp({ quality: THUMB_QUALITY, effort: 5 }).toBuffer()
-  await writeFile(join(dir, 'thumb.webp'), thumbBuf)
+  const thumbName = `thumb.${contentHash(thumbBuf)}.webp`
+  await writeFile(join(dir, thumbName), thumbBuf)
 
   // §37.3 blur placeholder — tiny, inlined on the row, so `next/image` has
   // something to show before the real file arrives and the layout never shifts.
   const blur = await sharp(fullBuf).resize(16, null, { fit: 'inside' }).webp({ quality: 28 }).toBuffer()
 
   return {
-    imageUrl: `/artwork/${artworkId}/full.webp`,
-    thumbnailUrl: `/artwork/${artworkId}/thumb.webp`,
+    imageUrl: `/artwork/${artworkId}/${fullName}`,
+    thumbnailUrl: `/artwork/${artworkId}/${thumbName}`,
     blurDataUrl: `data:image/webp;base64,${blur.toString('base64')}`,
     generator,
     pxWidth: fw,
@@ -137,7 +161,6 @@ export async function renderArtwork(spec: RenderSpec, publicDir: string, artwork
 export async function renderArtistAvatar(slug: string, publicDir: string): Promise<string> {
   const dir = join(publicDir, 'artists')
   await mkdir(dir, { recursive: true })
-  const out = join(dir, `${slug}.webp`)
 
   const photo = join(process.cwd(), 'scripts', 'seed', 'photos', `${slug}.jpg`)
   if (existsSync(photo)) {
@@ -155,20 +178,22 @@ export async function renderArtistAvatar(slug: string, publicDir: string): Promi
       /* nothing to trim; use the frame as shot */
     }
 
-    await base
+    const buf = await base
       .resize(AVATAR_PX, AVATAR_PX, { fit: 'cover', position: 'top' })
       .webp({ quality: 86, effort: 5 })
-      .toFile(out)
-    return `/artists/${slug}.webp`
+      .toBuffer()
+    const name = `${slug}.${contentHash(buf)}.webp`
+    await writeFile(join(dir, name), buf)
+    return `/artists/${name}`
   }
 
-  return generateArtistMark(slug, dir, out)
+  return generateArtistMark(slug, dir)
 }
 
 const AVATAR_PX = 480
 
 /** The generated fallback, for any artist without a supplied photograph. */
-async function generateArtistMark(slug: string, dir: string, out: string): Promise<string> {
+async function generateArtistMark(slug: string, dir: string): Promise<string> {
   const rng = new Rng('artist:' + slug)
   const size = AVATAR_PX
   const ramps = ['#8B5E3C', '#3E6B95', '#4E7A55', '#6B5591', '#A9762F', '#8C3A32']
@@ -189,7 +214,7 @@ async function generateArtistMark(slug: string, dir: string, out: string): Promi
   const buf = await sharp(Buffer.from(svg))
     .composite([{ input: await grainLayer(size, size, new Rng(slug + ':g'), 0.7), blend: 'soft-light' }])
     .webp({ quality: 82 }).toBuffer()
-  await writeFile(out, buf)
-  void dir
-  return `/artists/${slug}.webp`
+  const name = `${slug}.${contentHash(buf)}.webp`
+  await writeFile(join(dir, name), buf)
+  return `/artists/${name}`
 }
